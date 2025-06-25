@@ -1,0 +1,53 @@
+<header class="header">
+    <h1 class="title">Hello, there</h1>
+    <p class="subtitle">How can I help you today?</p>
+    <ul class="suggestion-list">
+      <li class="suggestion" (click)="handleSuggestionClick('What is data science')">
+        <h4 class="text">What is data science?</h4>
+        <span class="icon material-symbols-rounded">analytics</span>
+      </li>
+      <li class="suggestion" (click)="handleSuggestionClick('Why use GPU for data science')">
+        <h4 class="text">Why use a GPU for data science?</h4>
+        <span class="icon material-symbols-rounded">memory</span>
+      </li>
+      <li class="suggestion" (click)="handleSuggestionClick('What is NVIDIA CUDA')">
+        <h4 class="text">What is NVIDIA CUDA?</h4>
+        <span class="icon material-symbols-rounded">bolt</span>
+      </li>
+      <li class="suggestion" (click)="handleSuggestionClick('How to use GPU with PyTorch')">
+        <h4 class="text">How to use GPU with PyTorch?</h4>
+        <span class="icon material-symbols-rounded">code</span>
+      </li>
+    </ul>
+  </header>
+  
+  <div class="chat-list">
+    <div *ngFor="let message of chatMessages" class="message" [ngClass]="message.type">
+      <div class="message-content">
+        <span class="avatar material-symbols-rounded">
+            {{ message.type === 'incoming' ? 'smart_toy' : 'person' }}
+        </span>
+        <p class="text">{{ message.text }}</p>
+      </div>
+      <span class="icon material-symbols-rounded" (click)="copyMessage(message.text)">content_copy</span>
+    </div>
+  </div>
+  
+  <div class="typing-area">
+    <form class="typing-form" (submit)="handleSubmit($event)">
+      <div class="input-wrapper">
+        <input type="text" [(ngModel)]="userInput" name="message" placeholder="Enter a prompt here" class="typing-input" required />
+        <button type="submit" id="send-message-button" class="icon material-symbols-rounded">send</button>
+      </div>
+      <div class="action-buttons">
+        <span id="theme-toggle-button" class="icon material-symbols-rounded" (click)="toggleTheme()">
+          {{ isLightMode ? 'dark_mode' : 'light_mode' }}
+        </span>
+        <span id="delete-chat-button" class="icon material-symbols-rounded" (click)="clearChat()">delete</span>
+      </div>
+    </form>
+    <p class="disclaimer-text">
+        Developed for the AI Spark Challenge - ASU and NVIDIA - 2025.
+    </p>
+  </div>
+  
