@@ -317,3 +317,45 @@ body.hide-header .header {
 .avatar.material-symbols-rounded {
     color: var(--text-color);
 }
+
+/* Cursor blink animation */
+.cursor-blink {
+    display: inline-block;
+    width: 1px;
+    height: 1em;
+    background: currentColor;
+    animation: blink 1s steps(2, start) infinite;
+    margin-left: 2px;
+    vertical-align: bottom;
+  }
+  
+  @keyframes blink {
+    0%, 50% {
+      opacity: 1;
+    }
+    51%, 100% {
+      opacity: 0;
+    }
+  }
+  
+  /* Typing dots animation */
+  .dot-blink {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    background-color: currentColor;
+    border-radius: 50%;
+    margin: 0 2px;
+    animation: dotBlink 1.2s infinite ease-in-out;
+  }
+  
+  @keyframes dotBlink {
+    0%, 80%, 100% {
+      opacity: 0.3;
+      transform: scale(0.8);
+    }
+    40% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
