@@ -1,37 +1,72 @@
 import { Injectable } from '@angular/core';
-import { Client } from '@gradio/client';
-import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GradioService {
-  private client: any;
+  private readonly API_URL = '/.netlify/functions/gradio-proxy';
 
-  async initClient() {
-    console.log('environment.GRADIO_API_URL:',environment.GRADIO_API_URL);
-    this.client = await Client.connect(environment.GRADIO_API_URL);
+  /**
+   * Sends a message to the Gradio proxy serverless function
+   * @param userInput User's text input
+   * @param chatHistory Current chat history array
+   * @returns Promise resolving to [textboxOutput: string, updatedChatHistory: any[]]
+   */
+  async askGraph(userInput: string, chatHistory: any[] = []): Promise<[string, any[]]> {
+    try {
+      const response = await fetch(this.API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'ask_graph',
+          user_input: userInput,
+          chat_history: chatHistory,
+        }),
+      });
+
+      if (!response.ok) throw new Error('Network response was not ok');
+
+      const json = await response.json();
+
+      // The proxy returns JSON like { data: [...] }
+      // We want the array inside `data` property
+      if (!json || !Array.isArray(json.data)) {
+        throw new Error('Invalid response format from server');
+      }
+
+      return json.data as [string, any[]];
+    } catch (error) {
+      console.error('Error in askGraph:', error);
+      return ['Error: Server failed to respond.', []];
+    }
   }
 
-  async askGraph(userInput: string, chatHistory: any[] = []) {
-    if (!this.client) {
-      await this.initClient();
+  /**
+   * Clears the conversation via Gradio proxy
+   * @returns Promise resolving to [textboxOutput: string, updatedChatHistory: any[]]
+   */
+  async clearConversation(): Promise<[string, any[]]> {
+    try {
+      const response = await fetch(this.API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'clear_conversation',
+        }),
+      });
+
+      if (!response.ok) throw new Error('Network response was not ok');
+
+      const json = await response.json();
+
+      if (!json || !Array.isArray(json.data)) {
+        throw new Error('Invalid response format from server');
+      }
+
+      return json.data as [string, any[]];
+    } catch (error) {
+      console.error('Error in clearConversation:', error);
+      return ['Error clearing conversation.', []];
     }
-
-    const result = await this.client.predict("/ask_graph", {
-      user_input: userInput,
-      chat_history: chatHistory
-    });
-
-    return result.data; // returns [textboxOutput, updatedChatHistory]
-  }
-
-  async clearConversation() {
-    if (!this.client) {
-      await this.initClient();
-    }
-
-    const result = await this.client.predict("/clear_conversation", {});
-    return result.data;
   }
 }
