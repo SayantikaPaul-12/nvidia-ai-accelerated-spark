@@ -21,27 +21,61 @@
   </ul>
 </header>
 
+<!-- Agent Type Selector Box - Top Right -->
+<div class="agent-selector-box">
+  <h4>Select Agent</h4>
+  <ul class="agent-options">
+    <li
+      *ngFor="let agent of agentTypes"
+      [class.selected]="selectedAgent === agent.value"
+      (click)="selectAgent(agent.value)"
+      class="suggestion agent-option"
+      [attr.title]="agent.description">
+      <span class="icon material-symbols-rounded">person</span>
+      <span class="text">{{ agent.label }}</span>
+    </li>
+  </ul>
+</div>
+
+
+<!-- Chat Messages -->
 <div class="chat-list">
   <div *ngFor="let message of chatMessages" class="message" [ngClass]="message.type">
-    <div class="message-content">
-      <span class="avatar material-symbols-rounded">
-        {{ message.type === 'incoming' ? 'smart_toy' : 'person' }}
-      </span>
-      <p class="text">{{ message.text }}</p>
-    </div>
+    <ng-container *ngIf="message.type === 'incoming'; else outgoingMessage">
+      <div class="markdown-box message-content">
+        <span class="avatar material-symbols-rounded">smart_toy</span>
+        <div class="text markdown-render">
+          <markdown [data]="message.text"></markdown>
+        </div>
+      </div>
+    </ng-container>
+  
+    <ng-template #outgoingMessage>
+      <div class="message-content">
+        <span class="avatar material-symbols-rounded">person</span>
+        <div class="text markdown-render">
+          <p>{{ message.text }}</p>
+        </div>
+      </div>
+    </ng-template>
+  
     <span class="icon material-symbols-rounded" (click)="copyMessage(message.text)">content_copy</span>
   </div>
+  
+  
+  
 
-  <!-- Typing animation (before message is fully typed out) -->
-  <div *ngIf="displayedText" class="message incoming">
+  <!-- Typing effect (in progress) -->
+  <div *ngIf="displayedText" class="message incoming markdown-box">
     <div class="message-content">
       <span class="avatar material-symbols-rounded">smart_toy</span>
-      <p class="text">
-        {{ displayedText }}
+      <div class="text markdown-render">
+        <markdown [data]="displayedText"></markdown>
         <span class="cursor-blink">|</span>
-      </p>
+      </div>
     </div>
   </div>
+  
 
   <!-- Blinking loader -->
   <div *ngIf="loading && !displayedText" class="message incoming">
@@ -56,6 +90,7 @@
   </div>
 </div>
 
+<!-- Input Area -->
 <div class="typing-area">
   <form class="typing-form" (submit)="handleSubmit($event)">
     <div class="input-wrapper">

@@ -28,8 +28,6 @@ export class GradioService {
 
       const json = await response.json();
 
-      // The proxy returns JSON like { data: [...] }
-      // We want the array inside `data` property
       if (!json || !Array.isArray(json.data)) {
         throw new Error('Invalid response format from server');
       }
@@ -67,6 +65,37 @@ export class GradioService {
     } catch (error) {
       console.error('Error in clearConversation:', error);
       return ['Error clearing conversation.', []];
+    }
+  }
+
+  /**
+   * Sets the bot agent via Gradio proxy
+   * @param botName Name of the bot agent selected
+   * @returns Promise resolving to [textboxOutput: string, updatedChatHistory: any[]]
+   */
+  async setBot(botName: string): Promise<[string, any[]]> {
+    try {
+      const response = await fetch(this.API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'set_bot',
+          bot_name: botName,
+        }),
+      });
+
+      if (!response.ok) throw new Error('Network response was not ok');
+
+      const json = await response.json();
+
+      if (!json || !Array.isArray(json.data)) {
+        throw new Error('Invalid response format from server');
+      }
+
+      return json.data as [string, any[]];
+    } catch (error) {
+      console.error('Error in setBot:', error);
+      return ['Error: Failed to set bot.', []];
     }
   }
 }

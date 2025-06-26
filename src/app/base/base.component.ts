@@ -2,11 +2,12 @@ import { Component, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { GradioService } from '../services/gradio.service';
+import { MarkdownModule } from 'ngx-markdown';
 
 @Component({
   selector: 'app-base',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, MarkdownModule],
   templateUrl: './base.component.html',
   styleUrls: ['./base.component.css'],
   encapsulation: ViewEncapsulation.None,
@@ -21,28 +22,64 @@ export class BaseComponent {
   displayedText: string = ''; // For animated incoming message
   loading: boolean = false;
 
-  predefinedResponses: { [key: string]: string } = {
-    "hi": "Hello! How may I assist you?",
-    "hello": "Hi there! Ready to talk Data Science?",
-    "what is your name?": "I'm 80++, your friendly AI assistant!",
-    "what is data science": "Data science is an interdisciplinary field that uses statistical and computational techniques to extract insights from data. It involves data cleaning, modeling, visualization, and deployment.",
-    "what programming languages are used in data science": "Popular languages include Python, R, and Julia. Python is most widely used due to libraries like pandas, scikit-learn, TensorFlow, and PyTorch.",
-    "what is machine learning": "Machine learning is a subset of AI that enables systems to learn patterns from data and make predictions or decisions without being explicitly programmed.",
-    "why use gpu for data science": "GPUs (Graphics Processing Units) accelerate computations—especially for deep learning and large-scale data processing—by parallelizing operations across thousands of cores.",
-    "what is nvidia cuda": "CUDA is NVIDIA's parallel computing platform and API. It allows developers to use NVIDIA GPUs for general-purpose processing like deep learning and scientific computation.",
-    "what is nvidia": "NVIDIA is a leading manufacturer of GPUs. Their hardware powers many machine learning and AI systems due to superior performance and support for deep learning frameworks.",
-    "which nvidia gpus are good for data science": "The RTX 40-series, RTX 30-series (like 3090), and A100 GPUs are excellent for deep learning and data science. They offer high CUDA core counts and VRAM for large models.",
-    "what is tensorflow": "TensorFlow is an open-source deep learning framework developed by Google. It supports neural network design, training, and deployment—often accelerated by GPUs.",
-    "what is pytorch": "PyTorch is a popular deep learning framework developed by Meta (Facebook). It’s known for its dynamic computation graph and GPU acceleration via CUDA.",
-    "how to use gpu with pytorch": `
-import torch
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-model = MyModel().to(device)
-`,
-    "can you help me with data science": "Absolutely! Ask me anything about machine learning, data analysis, or using GPUs for AI.",
-  };
+  agentTypes = [
+    {
+      value: 'Socratic Totor Tutor',
+      label: 'Socratic Tutor',
+      description: 'A tutor specialized in Socratic method.',
+    },
+    {
+      value: 'Quiz Mode',
+      label: 'Quiz Mode',
+      description: 'Interactive quiz-based learning.',
+    },
+    {
+      value: 'Data Science Mentor',
+      label: 'Data Science Mentor',
+      description: 'Mentor for detailed data science explanations.',
+    },
+    {
+      value: 'Walkthrough Mode',
+      label: 'Walkthrough Mode',
+      description: 'Step-by-step walkthroughs and guides.',
+    },
+  ];
+
+  selectedAgent: string = this.agentTypes[0].value; // Default first agent
 
   constructor(private gradioService: GradioService) {}
+
+  // New method to change the active chat agent
+  async changeChatAgent(botName: string): Promise<void> {
+    if (this.selectedAgent === botName) return; // no change
+  
+    this.loading = true;
+    try {
+      // Call gradio service to set the bot
+      const [initialMessage, updatedChat] = await this.gradioService.setBot(botName);
+  
+      this.selectedAgent = botName;
+  
+      // Keep existing chatHistory and chatMessages intact (do NOT overwrite)
+  
+      if (initialMessage) {
+        // Show initial bot message if any — push it to chatMessages and optionally update chatHistory
+        this.chatMessages.push({ text: initialMessage, type: 'incoming' });
+        
+        // Optionally also append to chatHistory if needed (depends on your logic)
+        this.chatHistory.push({ role: 'assistant', content: initialMessage });
+      }
+    } catch (error) {
+      console.error('Error changing bot:', error);
+    }
+    this.loading = false;
+  }
+  
+
+  // Modified selectAgent to call changeChatAgent
+  selectAgent(value: string): void {
+    this.changeChatAgent(value);
+  }
 
   async sendMessage() {
     if (!this.userInput.trim()) return;
