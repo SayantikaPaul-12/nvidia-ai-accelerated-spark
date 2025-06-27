@@ -49,31 +49,46 @@ export class BaseComponent {
 
   constructor(private gradioService: GradioService) {}
 
-  // New method to change the active chat agent
   async changeChatAgent(botName: string): Promise<void> {
     if (this.selectedAgent === botName) return; // no change
+    if (this.loading) return;
   
     this.loading = true;
     try {
-      // Call gradio service to set the bot
+      // 1. Set the bot first
       const [initialMessage, updatedChat] = await this.gradioService.setBot(botName);
-  
       this.selectedAgent = botName;
   
-      // Keep existing chatHistory and chatMessages intact (do NOT overwrite)
-  
-      if (initialMessage) {
-        // Show initial bot message if any — push it to chatMessages and optionally update chatHistory
-        this.chatMessages.push({ text: initialMessage, type: 'incoming' });
-        
-        // Optionally also append to chatHistory if needed (depends on your logic)
-        this.chatHistory.push({ role: 'assistant', content: initialMessage });
+      // 2. Keep chat history but send a special prompt message that contains conversation summary
+      // Compose a user message summarizing chat history
+      const historySummary = this.chatHistory
+        .map(msg => `${msg.role}: ${typeof msg.content === 'string' ? msg.content : '[non-text content]'}`)
+        .join('\n');
+
+      if(!historySummary) {
+        this.loading = false;
+        return;
       }
+  
+      const systemPrompt = ` Here is the conversation history for context:\n${historySummary}. Please keep this as context and stay in your character.`;
+      console.log(systemPrompt)
+      await this.sendMessage(systemPrompt);
+  
+      // 4. Optionally, add the initial bot message from setBot call
+      // if (initialMessage) {
+      //   this.chatMessages.push({ text: initialMessage, type: 'incoming' });
+      //   this.chatHistory.push({ role: 'assistant', content: initialMessage });
+      // }
+
+      this.chatMessages.splice(-2, 2);
+      this.chatHistory.splice(-2, 2);
+      
     } catch (error) {
       console.error('Error changing bot:', error);
     }
     this.loading = false;
   }
+  
   
 
   // Modified selectAgent to call changeChatAgent
@@ -81,25 +96,31 @@ export class BaseComponent {
     this.changeChatAgent(value);
   }
 
-  async sendMessage() {
-    if (!this.userInput.trim()) return;
-    if (this.loading) return;
-
-    const userMsg = this.userInput;
+  async sendMessage(messageOverride?: string) {
+    const userMsg = messageOverride !== undefined ? messageOverride : this.userInput.trim();
+    if (!userMsg) return;
+    if (this.loading && !messageOverride) return;
+  
+    // Push outgoing message
     this.chatMessages.push({ text: userMsg, type: 'outgoing' });
+  
     this.loading = true;
     this.displayedText = '';
-    this.userInput = '';
-
+  
+    // Clear userInput only if not overridden message
+    if (messageOverride === undefined) {
+      this.userInput = '';
+    }
+  
     try {
       const [_, updatedChat] = await this.gradioService.askGraph(userMsg, this.chatHistory);
       this.chatHistory = updatedChat;
-
+  
       const lastResponse = updatedChat
         .slice()
         .reverse()
         .find((msg: any) => msg.role === 'assistant');
-
+  
       if (lastResponse?.content) {
         await this.animateBotResponse(lastResponse.content);
       }
@@ -107,9 +128,10 @@ export class BaseComponent {
       console.error('Error sending message:', error);
       this.chatMessages.push({ text: 'Error: Could not reach server.', type: 'incoming' });
     }
-
+  
     this.loading = false;
   }
+  
 
   async animateBotResponse(text: string) {
     const words = text.split(' ');
@@ -168,22 +190,59 @@ export class BaseComponent {
 
   uploadedFiles: File[] = [];
 
-  handleFileUpload(event: Event) {
+  async handleFileUpload(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
-      // Convert FileList to array and append new files (avoid duplicates if you want)
       const filesArray = Array.from(input.files);
-      // Optional: if you want to replace existing files, just assign
-      // this.uploadedFiles = filesArray;
-
-      // Or append new files, avoiding duplicates by name:
-      filesArray.forEach(file => {
-        if (!this.uploadedFiles.some(f => f.name === file.name)) {
-          this.uploadedFiles.push(file);
+  
+      for (const file of filesArray) {
+        if (this.uploadedFiles.some(f => f.name === file.name)) continue;
+  
+        this.uploadedFiles.push(file);
+        this.loading = true;
+  
+        try {
+          const formData = new FormData();
+          formData.append('file', file);
+  
+          const response = await fetch('/.netlify/functions/gradio-proxy', {
+            method: 'POST',
+            body: formData,
+          });
+  
+          if (!response.ok) {
+            throw new Error(`Upload failed with status ${response.status}`);
+          }
+  
+          const result = await response.json();
+          console.log('Document processed result:', result);
+  
+          // Optionally: show result in chat area
+          if (result?.data) {
+            this.chatMessages.push({
+              text: `Document: ${file.name} processed. ✅`,
+              type: 'incoming',
+            });
+  
+            // Or use actual returned data from Gradio
+            // this.chatMessages.push({
+            //   text: result.data?.[0] || 'File processed successfully.',
+            //   type: 'incoming',
+            // });
+          }
+        } catch (error) {
+          console.error('File upload failed:', error);
+          this.chatMessages.push({
+            text: `Error processing ${file.name}`,
+            type: 'incoming',
+          });
+        } finally {
+          this.loading = false;
         }
-      });
+      }
     }
   }
+  
 
 
 

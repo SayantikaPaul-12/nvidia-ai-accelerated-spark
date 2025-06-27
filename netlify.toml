@@ -1,2 +1,6 @@
 [functions]
 directory = "netlify/functions"
+
+[functions."gradio-proxy"]
+  external_node_modules = ["busboy"]
+
