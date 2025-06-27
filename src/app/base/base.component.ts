@@ -29,26 +29,27 @@ export class BaseComponent implements AfterViewInit {
 
   agentTypes = [
     {
-      value: 'Socratic Totor Tutor',
+      value: 'Socratic Tutor',
       label: 'Socratic Tutor',
-      description: 'A tutor specialized in Socratic method.',
+      description: 'Gently asks questions and nudges you to find answers yourself.',
     },
     {
-      value: 'Quiz Mode',
-      label: 'Quiz Mode',
-      description: 'Interactive quiz-based learning.',
+      value: 'General Purpose Assistant',
+      label: 'General Purpose Assistant',
+      description: 'Similar to your favourite AI assistant, but with a focus on learning Data Science.',
     },
     {
-      value: 'Data Science Mentor',
-      label: 'Data Science Mentor',
-      description: 'Mentor for detailed data science explanations.',
+      value: 'GPU Benchmarking & Guidance',
+      label: 'GPU Benchmarking & Guidance',
+      description: 'Writes code well, speeds it up with GPUs, and runs the code to tell exactly how long it runs.',
     },
     {
-      value: 'Walkthrough Mode',
-      label: 'Walkthrough Mode',
-      description: 'Step-by-step walkthroughs and guides.',
-    },
+      value: '📝 Quiz Mode',
+      label: '📝 Quiz Mode',
+      description: 'Interactive quiz-based learning to test your knowledge on Data Science.',
+    }
   ];
+  
 
   selectedAgent: string = this.agentTypes[0].value; // Default first agent
 

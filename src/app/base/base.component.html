@@ -1,6 +1,6 @@
 <header class="header">
   <h1 class="title">Hello, there</h1>
-  <p class="subtitle">Choose your AI assistant:</p>
+  <p class="subtitle">Choose your 80++ AI assistant:</p>
   <ul class="agent-suggestion-list">
     <li class="agent-suggestion" *ngFor="let agent of agentTypes" [class.active]="selectedAgent === agent.value"
       (click)="selectAgent(agent.value)">
