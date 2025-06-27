@@ -1,22 +1,21 @@
 <header class="header">
   <h1 class="title">Hello, there</h1>
-  <p class="subtitle">How can I help you today?</p>
-  <ul class="suggestion-list">
-    <li class="suggestion" (click)="handleSuggestionClick('What is data science?')">
-      <h4 class="text">What is data science?</h4>
-      <span class="icon material-symbols-rounded">analytics</span>
-    </li>
-    <li class="suggestion" (click)="handleSuggestionClick('Why use GPU for data science?')">
-      <h4 class="text">Why use a GPU for data science?</h4>
-      <span class="icon material-symbols-rounded">memory</span>
-    </li>
-    <li class="suggestion" (click)="handleSuggestionClick('What is NVIDIA CUDA?')">
-      <h4 class="text">What is NVIDIA CUDA?</h4>
-      <span class="icon material-symbols-rounded">bolt</span>
-    </li>
-    <li class="suggestion" (click)="handleSuggestionClick('How to use GPU with PyTorch?')">
-      <h4 class="text">How to use GPU with PyTorch?</h4>
-      <span class="icon material-symbols-rounded">code</span>
+  <p class="subtitle">Choose your AI assistant:</p>
+  <ul class="agent-suggestion-list">
+    <li class="agent-suggestion" *ngFor="let agent of agentTypes" [class.active]="selectedAgent === agent.value"
+      (click)="selectAgent(agent.value)">
+
+      <label class="agent-radio">
+        <input type="radio" name="agent" [value]="agent.value" [checked]="selectedAgent === agent.value" readonly />
+        <span class="radio-circle"></span>
+      </label>
+
+      <div class="agent-info">
+        <h4 class="agent-label">{{ agent.label }}</h4>
+        <p class="agent-description">{{ agent.description }}</p>
+      </div>
+
+      <span class="icon material-symbols-rounded">person</span>
     </li>
   </ul>
 </header>
@@ -38,69 +37,67 @@
 </div>
 
 
-<!-- Chat Messages -->
-<div class="chat-list">
-  <div *ngFor="let message of chatMessages" class="message" [ngClass]="message.type">
-    <ng-container *ngIf="message.type === 'incoming'; else outgoingMessage">
-      <div class="markdown-box message-content">
+<!-- Scrollable chat container -->
+<div id="scroller">
+  <div class="chat-list">
+    <div *ngFor="let message of chatMessages" class="message" [ngClass]="message.type">
+      <ng-container *ngIf="message.type === 'incoming'; else outgoingMessage">
+        <div class="markdown-box message-content">
+          <span class="avatar material-symbols-rounded">smart_toy</span>
+          <div class="text markdown-render">
+            <markdown [data]="message.text"></markdown>
+          </div>
+        </div>
+      </ng-container>
+
+      <ng-template #outgoingMessage>
+        <div class="message-content">
+          <span class="avatar material-symbols-rounded">person</span>
+          <div class="text markdown-render">
+            <p>{{ message.text }}</p>
+          </div>
+        </div>
+      </ng-template>
+
+      <span class="icon material-symbols-rounded" (click)="copyMessage(message.text)">content_copy</span>
+    </div>
+
+
+
+
+    <!-- Typing effect (in progress) -->
+    <div *ngIf="displayedText" class="message incoming markdown-box">
+      <div class="message-content">
         <span class="avatar material-symbols-rounded">smart_toy</span>
         <div class="text markdown-render">
-          <markdown [data]="message.text"></markdown>
+          <markdown [data]="displayedText"></markdown>
+          <span class="cursor-blink">|</span>
         </div>
       </div>
-    </ng-container>
-  
-    <ng-template #outgoingMessage>
+    </div>
+
+
+    <!-- Blinking loader -->
+    <div *ngIf="loading && !displayedText" class="message incoming">
       <div class="message-content">
-        <span class="avatar material-symbols-rounded">person</span>
-        <div class="text markdown-render">
-          <p>{{ message.text }}</p>
-        </div>
-      </div>
-    </ng-template>
-  
-    <span class="icon material-symbols-rounded" (click)="copyMessage(message.text)">content_copy</span>
-  </div>
-  
-  
-  
-
-  <!-- Typing effect (in progress) -->
-  <div *ngIf="displayedText" class="message incoming markdown-box">
-    <div class="message-content">
-      <span class="avatar material-symbols-rounded">smart_toy</span>
-      <div class="text markdown-render">
-        <markdown [data]="displayedText"></markdown>
-        <span class="cursor-blink">|</span>
+        <span class="avatar material-symbols-rounded">smart_toy</span>
+        <p class="text">
+          <span class="dot-blink"></span>
+          <span class="dot-blink" style="animation-delay: 0.2s;"></span>
+          <span class="dot-blink" style="animation-delay: 0.4s;"></span>
+        </p>
       </div>
     </div>
   </div>
-  
-
-  <!-- Blinking loader -->
-  <div *ngIf="loading && !displayedText" class="message incoming">
-    <div class="message-content">
-      <span class="avatar material-symbols-rounded">smart_toy</span>
-      <p class="text">
-        <span class="dot-blink"></span>
-        <span class="dot-blink" style="animation-delay: 0.2s;"></span>
-        <span class="dot-blink" style="animation-delay: 0.4s;"></span>
-      </p>
-    </div>
-  </div>
+  <div id="anchor"></div>
 </div>
 
 
 
-<div
-  *ngIf="uploadedFiles.length > 0"
-  class="uploaded-files-container"
+<div *ngIf="uploadedFiles.length > 0" class="uploaded-files-container"
   style="display:flex; overflow-x:auto; gap:12px; padding:8px 16px; max-width: 100%;">
 
-  <div
-    *ngFor="let file of uploadedFiles"
-    class="uploaded-file-box"
-    style="
+  <div *ngFor="let file of uploadedFiles" class="uploaded-file-box" style="
       flex: 0 0 auto;
       display:flex;
       align-items:center;
@@ -125,28 +122,19 @@
 <div class="typing-area">
   <form class="typing-form" (submit)="handleSubmit($event)">
     <div class="input-wrapper">
-      <input
-        type="text"
-        [(ngModel)]="userInput"
-        name="message"
-        placeholder="Enter a prompt here"
-        class="typing-input"
+      <input type="text" [(ngModel)]="userInput" name="message" placeholder="Enter a prompt here" class="typing-input"
         required />
       <button type="submit" id="send-message-button" class="icon material-symbols-rounded">send</button>
     </div>
 
     <!-- Document Upload Button -->
-    <div class="file-upload-wrapper">
+    <!-- <div class="file-upload-wrapper">
       <label for="file-upload" class="file-upload-label icon material-symbols-rounded" style="cursor:pointer;">
         upload_file
       </label>
-      <input
-        type="file"
-        id="file-upload"
-        (change)="handleFileUpload($event)"
-        accept=".pdf,.doc,.docx,.txt"
+      <input type="file" id="file-upload" (change)="handleFileUpload($event)" accept=".pdf,.doc,.docx,.txt"
         style="display:none" />
-    </div>
+    </div> -->
 
     <div class="action-buttons">
       <span id="theme-toggle-button" class="icon material-symbols-rounded" (click)="toggleTheme()">

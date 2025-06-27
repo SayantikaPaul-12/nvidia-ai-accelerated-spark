@@ -1,8 +1,9 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation, ViewChild, ElementRef, AfterViewChecked, HostListener, AfterViewInit  } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { GradioService } from '../services/gradio.service';
 import { MarkdownModule } from 'ngx-markdown';
+
 
 @Component({
   selector: 'app-base',
@@ -12,7 +13,11 @@ import { MarkdownModule } from 'ngx-markdown';
   styleUrls: ['./base.component.css'],
   encapsulation: ViewEncapsulation.None,
 })
-export class BaseComponent {
+export class BaseComponent implements AfterViewInit {
+
+  ngAfterViewInit() {
+    this.onScroll(); // check on load
+  }
   userInput: string = '';
   isLightMode: boolean = false;
 
@@ -48,6 +53,18 @@ export class BaseComponent {
   selectedAgent: string = this.agentTypes[0].value; // Default first agent
 
   constructor(private gradioService: GradioService) {}
+
+  @HostListener('window:scroll', [])
+  onScroll(): void {
+    const header = document.querySelector('.header');
+    const floatingBox = document.querySelector('.agent-selector-box') as HTMLElement;
+
+    if (header && floatingBox) {
+      const rect = header.getBoundingClientRect();
+      floatingBox.style.display = rect.bottom < 0 ? 'block' : 'none';
+    }
+  }
+
 
   async changeChatAgent(botName: string): Promise<void> {
     if (this.selectedAgent === botName) return; // no change

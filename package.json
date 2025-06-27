@@ -19,6 +19,7 @@
     "@angular/platform-browser-dynamic": "^17.3.0",
     "@angular/router": "^17.3.0",
     "@netlify/functions": "^4.1.7",
+    "axios": "^1.10.0",
     "busboy": "^1.6.0",
     "ngx-markdown": "^17.2.1",
     "rxjs": "~7.8.0",

@@ -479,4 +479,105 @@ body.hide-header .header {
     overflow: hidden;
     text-overflow: ellipsis;
   }
+
+  .agent-suggestion-list {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 0;
+    margin: 1rem 0;
+  }
   
+  .agent-suggestion {
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+    padding: 1rem;
+    border-radius: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    width: calc(50% - 0.5rem);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    transition: background 0.3s ease;
+    position: relative;
+  }
+  
+  .agent-suggestion:hover {
+    background-color: var(--secondary-hover-color);
+  }
+  
+  .agent-suggestion.active {
+    background: linear-gradient(135deg, #5A9E00, #A0C54E);
+    color: white;
+    box-shadow: 0 0 8px rgba(90, 158, 0, 0.3);
+  }
+  
+  
+  .agent-radio {
+    margin-right: 0.75rem;
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  
+  .agent-radio input[type="radio"] {
+    opacity: 0;
+    position: absolute;
+  }
+  
+  .radio-circle {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 2px solid var(--text-color);
+    display: inline-block;
+    margin-right: 0.5rem;
+  }
+  
+  .agent-suggestion.active .radio-circle {
+    background-color: white;
+  }
+  
+  .agent-info {
+    flex: 1;
+  }
+  
+  .agent-label {
+    margin: 0;
+    font-weight: 600;
+  }
+  
+  .agent-description {
+    margin: 0.25rem 0 0;
+    font-size: 0.85rem;
+    opacity: 0.8;
+  }
+  
+  .icon {
+    font-size: 1.5rem;
+    margin-left: auto;
+  }
+
+  .agent-selector-box {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 1000;
+    max-width: 240px;
+    background: var(--secondary-color);
+    border-radius: 12px;
+    padding: 1rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    color: var(--text-color);
+    border: 1px solid var(--secondary-hover-color);
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+  }
+  
+  /* Optionally hide it initially */
+  .agent-selector-box.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+    
