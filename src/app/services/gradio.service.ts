@@ -98,4 +98,37 @@ export class GradioService {
       return ['Error: Failed to set bot.', []];
     }
   }
+
+    /**
+   * Processes a document via Gradio proxy (uploads and gets response)
+   * @param file File to be uploaded and processed
+   * @returns Promise resolving to the result from Gradio backend
+   */
+  async processDocument(file: File): Promise<any> {
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('action', 'process_document'); // Custom action for your proxy logic
+
+      const response = await fetch(this.API_URL, {
+        method: 'POST',
+        body: formData, // Note: No Content-Type header here — browser sets it automatically
+      });
+
+      if (!response.ok) throw new Error('Network response was not ok');
+
+      const json = await response.json();
+
+      if (!json || !json.data) {
+        throw new Error('Invalid response format from server');
+      }
+
+      return json.data;
+    } catch (error) {
+      console.error('Error in processDocument:', error);
+      throw error;
+    }
+  }
+
+
 }

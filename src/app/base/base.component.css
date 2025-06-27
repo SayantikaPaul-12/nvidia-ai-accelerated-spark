@@ -448,3 +448,35 @@ body.hide-header .header {
     overflow-x: auto;
   }
   
+  .uploaded-files-container {
+    display: flex;
+    overflow-x: auto;
+    gap: 12px;
+    padding: 8px 16px;
+    max-width: 100%;
+  }
+  
+  .uploaded-file-box {
+    flex: 0 0 auto;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:6px 12px;
+    border-radius: 8px;
+    background-color: var(--surface-variant, #f0f0f0);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    cursor: default;
+    min-width: 160px;
+  }
+  
+  .file-icon {
+    font-size: 20px;
+    color: var(--primary, #6200ee);
+  }
+  
+  .file-name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  

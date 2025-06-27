@@ -83,11 +83,13 @@ export class BaseComponent {
 
   async sendMessage() {
     if (!this.userInput.trim()) return;
+    if (this.loading) return;
 
     const userMsg = this.userInput;
     this.chatMessages.push({ text: userMsg, type: 'outgoing' });
     this.loading = true;
     this.displayedText = '';
+    this.userInput = '';
 
     try {
       const [_, updatedChat] = await this.gradioService.askGraph(userMsg, this.chatHistory);
@@ -106,7 +108,6 @@ export class BaseComponent {
       this.chatMessages.push({ text: 'Error: Could not reach server.', type: 'incoming' });
     }
 
-    this.userInput = '';
     this.loading = false;
   }
 
@@ -164,6 +165,27 @@ export class BaseComponent {
     navigator.clipboard.writeText(text);
     alert('Message copied!');
   }
+
+  uploadedFiles: File[] = [];
+
+  handleFileUpload(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      // Convert FileList to array and append new files (avoid duplicates if you want)
+      const filesArray = Array.from(input.files);
+      // Optional: if you want to replace existing files, just assign
+      // this.uploadedFiles = filesArray;
+
+      // Or append new files, avoiding duplicates by name:
+      filesArray.forEach(file => {
+        if (!this.uploadedFiles.some(f => f.name === file.name)) {
+          this.uploadedFiles.push(file);
+        }
+      });
+    }
+  }
+
+
 
   ngOnInit(): void {
     const saved = localStorage.getItem('themeColor');

@@ -2,19 +2,19 @@
   <h1 class="title">Hello, there</h1>
   <p class="subtitle">How can I help you today?</p>
   <ul class="suggestion-list">
-    <li class="suggestion" (click)="handleSuggestionClick('What is data science')">
+    <li class="suggestion" (click)="handleSuggestionClick('What is data science?')">
       <h4 class="text">What is data science?</h4>
       <span class="icon material-symbols-rounded">analytics</span>
     </li>
-    <li class="suggestion" (click)="handleSuggestionClick('Why use GPU for data science')">
+    <li class="suggestion" (click)="handleSuggestionClick('Why use GPU for data science?')">
       <h4 class="text">Why use a GPU for data science?</h4>
       <span class="icon material-symbols-rounded">memory</span>
     </li>
-    <li class="suggestion" (click)="handleSuggestionClick('What is NVIDIA CUDA')">
+    <li class="suggestion" (click)="handleSuggestionClick('What is NVIDIA CUDA?')">
       <h4 class="text">What is NVIDIA CUDA?</h4>
       <span class="icon material-symbols-rounded">bolt</span>
     </li>
-    <li class="suggestion" (click)="handleSuggestionClick('How to use GPU with PyTorch')">
+    <li class="suggestion" (click)="handleSuggestionClick('How to use GPU with PyTorch?')">
       <h4 class="text">How to use GPU with PyTorch?</h4>
       <span class="icon material-symbols-rounded">code</span>
     </li>
@@ -90,6 +90,24 @@
   </div>
 </div>
 
+
+
+<div
+  *ngIf="uploadedFiles.length > 0"
+  class="uploaded-files-container">
+
+  <div
+    *ngFor="let file of uploadedFiles"
+    class="uploaded-file-box">
+    <span class="icon material-symbols-rounded file-icon">
+      attachment
+    </span>
+    <span class="file-name" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+      {{ file.name }}
+    </span>
+  </div>
+</div>
+
 <!-- Input Area -->
 <div class="typing-area">
   <form class="typing-form" (submit)="handleSubmit($event)">
@@ -101,8 +119,22 @@
         placeholder="Enter a prompt here"
         class="typing-input"
         required />
-      <button type="submit" id="send-message-button" class="icon material-symbols-rounded">send</button>
+      <button type="submit" id="send-message-button" class="icon material-symbols-rounded" [disabled]="loading">send</button>
     </div>
+
+    <!-- Document Upload Button -->
+    <div class="file-upload-wrapper">
+      <label for="file-upload" class="file-upload-label icon material-symbols-rounded" style="cursor:pointer;">
+        upload_file
+      </label>
+      <input
+        type="file"
+        id="file-upload"
+        (change)="handleFileUpload($event)"
+        accept=".pdf,.doc,.docx,.txt"
+        style="display:none" />
+    </div>
+
     <div class="action-buttons">
       <span id="theme-toggle-button" class="icon material-symbols-rounded" (click)="toggleTheme()">
         {{ isLightMode ? 'dark_mode' : 'light_mode' }}
