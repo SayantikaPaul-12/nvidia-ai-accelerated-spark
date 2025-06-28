@@ -33,13 +33,13 @@
     </div>
 
     <!-- Document Upload Button -->
-    <!-- <div class="file-upload-wrapper">
+    <div class="file-upload-wrapper" *ngIf="selectedAgent === '🎥 Video Tutorial Bot'">
       <label for="file-upload" class="file-upload-label icon material-symbols-rounded" style="cursor:pointer;">
         upload_file
       </label>
-      <input type="file" id="file-upload" (change)="handleFileUpload($event)" accept=".pdf,.doc,.docx,.txt"
+      <input type="file" id="file-upload" (change)="handleFileUpload($event)" accept=".mp4"
         style="display:none" />
-    </div> -->
+    </div>
 
     <div class="action-buttons">
       <span id="theme-toggle-button" class="icon material-symbols-rounded" (click)="toggleTheme()">

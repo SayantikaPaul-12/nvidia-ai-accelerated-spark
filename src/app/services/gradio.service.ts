@@ -100,11 +100,11 @@ export class GradioService {
     }
   }
 
-    /**
-   * Processes a document via Gradio proxy (uploads and gets response)
-   * @param file File to be uploaded and processed
-   * @returns Promise resolving to the result from Gradio backend
-   */
+  /**
+ * Processes a document via Gradio proxy (uploads and gets response)
+ * @param file File to be uploaded and processed
+ * @returns Promise resolving to the result from Gradio backend
+ */
   async processDocument(file: File): Promise<any> {
     try {
       const formData = new FormData();
@@ -127,6 +127,39 @@ export class GradioService {
       return json.data;
     } catch (error) {
       console.error('Error in processDocument:', error);
+      throw error;
+    }
+  }
+
+  /**
+ * Uploads a video file to be processed by Gradio /process_video endpoint
+ * @param file Video file to upload (.mp4)
+ * @returns Promise resolving to the response from Gradio backend
+ */
+  async processVideo(file: File): Promise<any> {
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('action', 'process_video');  // critical: this tells Flask what to do
+
+      const response = await fetch('http://127.0.0.1:8000/process-video', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) throw new Error('Network response was not ok');
+
+      const json = await response.json();
+
+      console.log('Response:', response);
+
+      if (!json || !json.data) {
+        throw new Error('Invalid response format from server');
+      }
+
+      return json.data;
+    } catch (error) {
+      console.error('Error in processVideo:', error);
       throw error;
     }
   }

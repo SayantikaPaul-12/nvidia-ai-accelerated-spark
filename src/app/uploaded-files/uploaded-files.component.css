@@ -4,28 +4,36 @@
     gap: 12px;
     padding: 8px 16px;
     max-width: 100%;
-}
-
-.uploaded-file-box {
+    position: fixed;
+    left: 0;
+    bottom: 124px;
+    z-index: 999;
+  }
+  
+  .uploaded-file-box {
     flex: 0 0 auto;
     display: flex;
     align-items: center;
     gap: 8px;
     padding: 6px 12px;
     border-radius: 8px;
-    background-color: var(--surface-variant, #f0f0f0);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    cursor: default;
+    background-color: var(--secondary-color);
+    border-top: 1px solid var(--secondary-hover-color);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+    color: var(--text-color);
     min-width: 160px;
-}
-
-.file-icon {
+    max-width: 220px;
+  }
+  
+  .file-icon {
     font-size: 20px;
-    color: var(--primary, #6200ee);
-}
-
-.file-name {
+    color: var(--text-color);
+  }
+  
+  .file-name {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-}
+    color: var(--text-color);
+  }
+  

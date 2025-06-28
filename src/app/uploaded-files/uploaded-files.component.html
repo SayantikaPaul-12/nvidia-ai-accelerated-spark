@@ -1,22 +1,11 @@
 <div *ngIf="uploadedFiles.length > 0" class="uploaded-files-container"
     style="display:flex; overflow-x:auto; gap:12px; padding:8px 16px; max-width: 100%;">
   
-    <div *ngFor="let file of uploadedFiles" class="uploaded-file-box" style="
-        flex: 0 0 auto;
-        display:flex;
-        align-items:center;
-        gap:8px;
-        padding:6px 12px;
-        border-radius: 8px;
-        background-color: var(--surface-variant, #f0f0f0);
-        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        cursor: default;
-        min-width: 160px;
-      ">
-      <span class="icon material-symbols-rounded" style="font-size: 20px; color: var(--primary, #6200ee);">
-        attachment
+    <div *ngFor="let file of uploadedFiles" class="uploaded-file-box">
+      <span class="icon material-symbols-rounded">
+        smart_display
       </span>
-      <span class="file-name" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+      <span class="file-name">
         {{ file.name }}
       </span>
     </div>

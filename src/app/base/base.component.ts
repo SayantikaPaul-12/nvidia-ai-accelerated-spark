@@ -37,6 +37,12 @@ export class BaseComponent {
 
   agentTypes = [
     {
+      value: '🎥 Video Tutorial Bot',
+      label: 'Video Tutorial Bot',
+      description: 'Upload a video and it will learn from it, then answer questions about the video content.',
+      icon: 'smart_display', // Play icon for tutorials
+    },
+    {
       value: 'Socratic Tutor',
       label: 'Socratic Tutor',
       description: 'Gently asks questions and nudges you to find answers yourself.',
@@ -59,12 +65,6 @@ export class BaseComponent {
       label: 'Quiz Mode',
       description: 'Interactive quiz-based learning to test your knowledge on Data Science.',
       icon: 'quiz', // Question mark bubble
-    },
-    {
-      value: '🎥 Video Tutorial Bot',
-      label: 'Video Tutorial Bot',
-      description: 'Upload a video and it will learn from it, then answer questions about the video content.',
-      icon: 'smart_display', // Play icon for tutorials
     },
   ];
   
@@ -232,46 +232,25 @@ export class BaseComponent {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       const filesArray = Array.from(input.files);
-
+  
       for (const file of filesArray) {
         if (this.uploadedFiles.some(f => f.name === file.name)) continue;
-
+  
         this.uploadedFiles.push(file);
         this.loading = true;
-
+  
         try {
-          const formData = new FormData();
-          formData.append('file', file);
-
-          const response = await fetch('/.netlify/functions/gradio-proxy', {
-            method: 'POST',
-            body: formData,
+          // Call new GradioService method for video processing
+          const result = await this.gradioService.processVideo(file);
+  
+          this.chatMessages.push({
+            text: `Video: ${file.name} processed. Response: ${result}`,
+            type: 'incoming',
           });
-
-          if (!response.ok) {
-            throw new Error(`Upload failed with status ${response.status}`);
-          }
-
-          const result = await response.json();
-          console.log('Document processed result:', result);
-
-          // Optionally: show result in chat area
-          if (result?.data) {
-            this.chatMessages.push({
-              text: `Document: ${file.name} processed. ✅`,
-              type: 'incoming',
-            });
-
-            // Or use actual returned data from Gradio
-            // this.chatMessages.push({
-            //   text: result.data?.[0] || 'File processed successfully.',
-            //   type: 'incoming',
-            // });
-          }
         } catch (error) {
           console.error('File upload failed:', error);
           this.chatMessages.push({
-            text: `Error processing ${file.name}`,
+            text: `Error processing video ${file.name}`,
             type: 'incoming',
           });
         } finally {
