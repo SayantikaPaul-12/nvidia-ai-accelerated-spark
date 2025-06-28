@@ -1,25 +1,20 @@
 import { Injectable } from '@angular/core';
-import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GradioService {
-  private readonly API_URL = environment.GRADIO_API_URL;
+  private readonly BASE_URL = 'http://127.0.0.1:8000';
 
   /**
-   * Sends a message to the Gradio proxy serverless function
-   * @param userInput User's text input
-   * @param chatHistory Current chat history array
-   * @returns Promise resolving to [textboxOutput: string, updatedChatHistory: any[]]
+   * Sends a message to the Flask /ask-graph endpoint
    */
   async askGraph(userInput: string, chatHistory: any[] = []): Promise<[string, any[]]> {
     try {
-      const response = await fetch(this.API_URL, {
+      const response = await fetch(`${this.BASE_URL}/ask-graph`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          action: 'ask_graph',
           user_input: userInput,
           chat_history: chatHistory,
         }),
@@ -41,17 +36,12 @@ export class GradioService {
   }
 
   /**
-   * Clears the conversation via Gradio proxy
-   * @returns Promise resolving to [textboxOutput: string, updatedChatHistory: any[]]
+   * Clears the conversation via Flask /clear-conversation endpoint
    */
   async clearConversation(): Promise<[string, any[]]> {
     try {
-      const response = await fetch(this.API_URL, {
+      const response = await fetch(`${this.BASE_URL}/clear-conversation`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          action: 'clear_conversation',
-        }),
       });
 
       if (!response.ok) throw new Error('Network response was not ok');
@@ -70,19 +60,14 @@ export class GradioService {
   }
 
   /**
-   * Sets the bot agent via Gradio proxy
-   * @param botName Name of the bot agent selected
-   * @returns Promise resolving to [textboxOutput: string, updatedChatHistory: any[]]
+   * Sets the bot agent via Flask /set-bot endpoint
    */
   async setBot(botName: string): Promise<[string, any[]]> {
     try {
-      const response = await fetch(this.API_URL, {
+      const response = await fetch(`${this.BASE_URL}/set-bot`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          action: 'set_bot',
-          bot_name: botName,
-        }),
+        body: JSON.stringify({ bot_name: botName }),
       });
 
       if (!response.ok) throw new Error('Network response was not ok');
@@ -101,19 +86,16 @@ export class GradioService {
   }
 
   /**
- * Processes a document via Gradio proxy (uploads and gets response)
- * @param file File to be uploaded and processed
- * @returns Promise resolving to the result from Gradio backend
- */
+   * Processes a document via Flask endpoint (optional if you implement it)
+   */
   async processDocument(file: File): Promise<any> {
     try {
       const formData = new FormData();
       formData.append('file', file);
-      formData.append('action', 'process_document'); // Custom action for your proxy logic
 
-      const response = await fetch(this.API_URL, {
+      const response = await fetch(`${this.BASE_URL}/process-document`, {
         method: 'POST',
-        body: formData, // Note: No Content-Type header here — browser sets it automatically
+        body: formData,
       });
 
       if (!response.ok) throw new Error('Network response was not ok');
@@ -132,17 +114,14 @@ export class GradioService {
   }
 
   /**
- * Uploads a video file to be processed by Gradio /process_video endpoint
- * @param file Video file to upload (.mp4)
- * @returns Promise resolving to the response from Gradio backend
- */
+   * Uploads a video file to be processed by Flask /process-video endpoint
+   */
   async processVideo(file: File): Promise<any> {
     try {
       const formData = new FormData();
       formData.append('file', file);
-      formData.append('action', 'process_video');  // critical: this tells Flask what to do
 
-      const response = await fetch('http://127.0.0.1:8000/process-video', {
+      const response = await fetch(`${this.BASE_URL}/process-video`, {
         method: 'POST',
         body: formData,
       });
@@ -150,9 +129,6 @@ export class GradioService {
       if (!response.ok) throw new Error('Network response was not ok');
 
       const json = await response.json();
-
-      console.log('Response:', response);
-
       if (!json || !json.data) {
         throw new Error('Invalid response format from server');
       }
@@ -163,6 +139,4 @@ export class GradioService {
       throw error;
     }
   }
-
-
 }
