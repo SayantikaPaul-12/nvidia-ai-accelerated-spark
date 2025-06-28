@@ -1,584 +1,105 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
-.material-symbols-rounded {
-    font-variation-settings:
-      'wght' 400,
-      'FILL' 0,
-      'GRAD' 0,
-      'opsz' 24;
-    font-family: 'Material Symbols Rounded';
-    font-style: normal;
-    font-weight: normal;
-    font-display: block;
-    line-height: 1;
-    letter-spacing: normal;
-    text-transform: none;
-    white-space: nowrap;
-    direction: ltr;
-    -webkit-font-feature-settings: 'liga';
-    -webkit-font-smoothing: antialiased;
-}
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: "Poppins", sans-serif;
-}
-:root {
-    /* Dark mode colors */
-    --text-color: #E3E3E3;
-    --subheading-color: #828282;
-    --placeholder-color: #A6A6A6;
-    --primary-color: #242424;
-    --secondary-color: #383838;
-    --secondary-hover-color: #444;
-}
-.light_mode {
-    /* Light mode colors */
-    --text-color: #222;
-    --subheading-color: #A0A0A0;
-    --placeholder-color: #6C6C6C;
-    --primary-color: #FFF;
-    --secondary-color: #E9EEF6;
-    --secondary-hover-color: #DBE1EA;
-}
-body {
-    background: var(--primary-color);
-}
-.header, .chat-list .message, .typing-form {
-    margin: 0 auto;
-    max-width: 980px;
-}
-.header {
-    margin-top: 6vh;
-    padding: 1rem;
-    overflow-x: hidden;
-}
-body.hide-header .header {
-    margin: 0;
-    display: none;
-}
-.header :where(.title, .subtitle) {
-    color: var(--text-color);
-    font-weight: 500;
-    line-height: 4rem;
-}
-.header .title {
-    width: fit-content;
-    font-size: 3rem;
-    background-clip: text;
-    background: linear-gradient(to right, #76B900, #8C1D40);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-.header .subtitle {
-    font-size: 2.6rem;
-    color: var(--subheading-color);
-}
-.suggestion-list {
-    width: 100%;
-    list-style: none;
-    display: flex;
-    gap: 1.25rem;
-    margin-top: 9.5vh;
-    overflow: hidden;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: none;
-}
-.suggestion-list .suggestion {
-    cursor: pointer;
-    padding: 1.25rem;
-    width: 222px;
-    flex-shrink: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    border-radius: 0.75rem;
-    justify-content: space-between;
-    background: var(--secondary-color);
-    transition: 0.2s ease;
-}
-.suggestion-list .suggestion:hover {
-    background: var(--secondary-hover-color);
-}
-.suggestion-list .suggestion :where(.text, .icon) {
-    font-weight: 400;
-    color: var(--text-color);
-}
-.suggestion-list .suggestion .icon {
-    width: 42px;
-    height: 42px;
-    display: flex;
-    font-size: 1.3rem;
-    margin-top: 2.5rem;
-    align-self: flex-end;
-    align-items: center;
-    border-radius: 50%;
-    justify-content: center;
-    color: var(--text-color);
-    background: var(--primary-color);
-}
-.chat-list {
-    padding: 2rem 1rem 12rem;
-    max-height: 100vh;
-    overflow-y: auto;
-    scrollbar-color: #999 transparent;
-}
-.chat-list .message.incoming {
-    margin-top: 1.5rem;
-}
-.chat-list .message .message-content {
-    display: flex;
-    gap: 1.5rem;
-    width: 100%;
-    align-items: center;
-}
-.chat-list .message .text {
-    color: var(--text-color);
-    white-space: pre-wrap;
-}
-.chat-list .message.error .text {
-    color: #e55865;
-}
-.chat-list .message.loading .text {
-    display: none;
-}
-.chat-list .message .avatar {
-    width: 40px;
-    height: 40px;
-    object-fit: cover;
-    border-radius: 50%;
-    align-self: flex-start;
-}
-.chat-list .message.loading .avatar {
-    animation: rotate 3s linear infinite;
-}
-@keyframes rotate {
-    100% {
-        transform: rotate(360deg);
-    }
-}
-.chat-list .message .icon {
-    color: var(--text-color);
-    cursor: pointer;
-    height: 35px;
-    width: 35px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: none;
-    font-size: 1.25rem;
-    margin-left: 3.5rem;
-    visibility: hidden;
-}
-.chat-list .message .icon.hide {
-    visibility: hidden;
-}
-.chat-list .message:not(.loading, .error):hover .icon:not(.hide){
-    visibility: visible;
-}
-.chat-list .message .icon:hover {
-    background: var(--secondary-hover-color);
-}
-.chat-list .message .loading-indicator {
-    display: none;
-    gap: 0.8rem;
-    width: 100%;
-    flex-direction: column;
-}
-.chat-list .message.loading .loading-indicator {
-    display: flex;
-}
-.chat-list .message .loading-indicator .loading-bar {
-    height: 11px;
-    width: 100%;
-    border-radius: 0.135rem;
-    background-position: -800px 0;
-    background: linear-gradient(to right, #4285f4, var(--primary-color), #4285f4);
-    animation: loading 3s linear infinite;
-}
-.chat-list .message .loading-indicator .loading-bar:last-child {
-    width: 70%;
-}
-@keyframes loading {
-    0% {
-        background-position: -800px 0;
-    }
-    100% {
-        background-position: 800px 0;
-    }
-}
 .typing-area {
-    position: fixed;
-    width: 100%;
-    left: 0;
-    bottom: 0;
-    padding: 1rem;
-    background: var(--primary-color);
+  position: fixed;
+  width: 100%;
+  left: 0;
+  bottom: 0;
+  padding: 1rem;
+  background: var(--primary-color);
 }
+
 .typing-area :where(.typing-form, .action-buttons) {
-    display: flex;
-    gap: 0.75rem;
+  display: flex;
+  gap: 0.75rem;
 }
+
 .typing-form .input-wrapper {
-    width: 100%;
-    height: 56px;
-    display: flex;
-    position: relative;
+  width: 100%;
+  height: 56px;
+  display: flex;
+  position: relative;
 }
+
 .typing-form .typing-input {
-    height: 100%;
-    width: 100%;
-    border: none;
-    outline: none;
-    resize: none;
-    font-size: 1rem;
-    color: var(--text-color);
-    padding: 1.1rem 4rem 1.1rem 1.5rem;
-    border-radius: 100px;
-    background: var(--secondary-color);
+  height: 100%;
+  width: 100%;
+  border: none;
+  outline: none;
+  resize: none;
+  font-size: 1rem;
+  color: var(--text-color);
+  padding: 1.1rem 4rem 1.1rem 1.5rem;
+  border-radius: 100px;
+  background: var(--secondary-color);
 }
+
 .typing-form .typing-input:focus {
-    background: var(--secondary-hover-color);
+  background: var(--secondary-hover-color);
 }
+
 .typing-form .typing-input::placeholder {
-    color: var(--placeholder-color);
+  color: var(--placeholder-color);
 }
+
 .typing-area .icon {
-    width: 56px;
-    height: 56px;
-    flex-shrink: 0;
-    cursor: pointer;
-    border-radius: 50%;
-    display: flex;
-    font-size: 1.4rem;
-    color: var(--text-color);
-    align-items: center;
-    justify-content: center;
-    background: var(--secondary-color);
-    transition: 0.2s ease;
+  width: 56px;
+  height: 56px;
+  flex-shrink: 0;
+  cursor: pointer;
+  border-radius: 50%;
+  display: flex;
+  font-size: 1.4rem;
+  color: var(--text-color);
+  align-items: center;
+  justify-content: center;
+  background: var(--secondary-color);
+  transition: 0.2s ease;
 }
+
 .typing-area .icon:hover {
-    background: var(--secondary-hover-color);
+  background: var(--secondary-hover-color);
 }
+
 .typing-form #send-message-button {
-    position: absolute;
-    right: 0;
-    outline: none;
-    border: none;
-    transform: scale(0);
-    background: transparent;
-    transition: transform 0.2s ease;
+  position: absolute;
+  right: 0;
+  outline: none;
+  border: none;
+  transform: scale(0);
+  background: transparent;
+  transition: transform 0.2s ease;
 }
-.typing-form .typing-input:valid ~ #send-message-button {
-    transform: scale(1);
+
+.typing-form .typing-input:valid~#send-message-button {
+  transform: scale(1);
 }
+
 .typing-area .disclaimer-text {
-    text-align: center;
-    font-size: 0.85rem;
-    margin-top: 1rem;
-    color: var(--placeholder-color);
-}
-/* Responsive media query code for small screen */
-@media (max-width: 768px) {
-    .header :is(.title, .subtitle) {
-        font-size: 2rem;
-        line-height: 2.6rem;
-    }
-    .header .subtitle {
-        font-size: 1.7rem;
-    }
-    .typing-area :where(.typing-form, .action-buttons) {
-        gap: 0.4rem;
-    }
-    .typing-form .input-wrapper {
-        height: 50px;
-    }
-    .typing-form .typing-input {
-        padding: 1.1rem 3.5rem 1.1rem 1.2rem;
-    }
-    .typing-area .icon {
-        height: 50px;
-        width: 50px;
-    }
-    .typing-area .disclaimer-text {
-        font-size: 0.75rem;
-        margin-top: 0.5rem;
-    }
+  text-align: center;
+  font-size: 0.85rem;
+  margin-top: 1rem;
+  color: var(--placeholder-color);
 }
 
 .header {
-    margin-top: 6vh;
-    padding: 1rem;
-    overflow-x: hidden;
+  margin-top: 6vh;
+  padding: 1rem;
+  overflow-x: hidden;
 }
 
 .avatar.material-symbols-rounded {
-    color: var(--text-color);
+  color: var(--text-color);
 }
 
-/* Cursor blink animation */
-.cursor-blink {
-    display: inline-block;
-    width: 1px;
-    height: 1em;
-    background: currentColor;
-    animation: blink 1s steps(2, start) infinite;
-    margin-left: 2px;
-    vertical-align: bottom;
-  }
-  
-  @keyframes blink {
-    0%, 50% {
-      opacity: 1;
-    }
-    51%, 100% {
-      opacity: 0;
-    }
-  }
-  
-  /* Typing dots animation */
-  .dot-blink {
-    display: inline-block;
-    width: 6px;
-    height: 6px;
-    background-color: currentColor;
-    border-radius: 50%;
-    margin: 0 2px;
-    animation: dotBlink 1.2s infinite ease-in-out;
-  }
-  
-  @keyframes dotBlink {
-    0%, 80%, 100% {
-      opacity: 0.3;
-      transform: scale(0.8);
-    }
-    40% {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
+.radio-circle {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--text-color);
+  display: inline-block;
+  margin-right: 0.5rem;
+}
 
-  .agent-selector-box {
-    position: fixed;
-    top: 1rem;
-    right: 1rem;
-    background: var(--secondary-color);
-    border-radius: 12px;
-    padding: 1rem;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-    max-width: 240px;
-    width: max-content;
-    font-family: inherit;
-    color: var(--text-color);
-    border: 1px solid var(--secondary-hover-color);
-  }
-  
-  .agent-selector-box h4 {
-    font-size: 1rem;
-    margin-bottom: 0.75rem;
-    color: var(--text-color);
-    font-weight: 600;
-  }
-  
-  .agent-options {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  
-  .agent-option {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.55rem 0.75rem;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    background-color: var(--primary-color);
-    color: var(--text-color);
-    transition: background-color 0.25s ease;
-  }
-  
-  .agent-option:hover {
-    background-color: var(--secondary-hover-color);
-  }
-  
-  .agent-option.selected {
-    background-color: #76b9001a; /* NVIDIA green transparent */
-    font-weight: 600;
-    border: 1px solid #76b900;
-  }
-  
-  .agent-option .icon {
-    font-size: 1.2rem;
-    color: #76b900;
-  }
-  
-  .markdown-box {
-    border: 1px solid var(--secondary-hover-color);
-    border-radius: 8px;
-    padding: 1rem;
-    background-color: var(--secondary-color);
-    margin-top: 1.5rem;
-  }
-  
-  .markdown-render {
-    color: var(--text-color);
-    white-space: normal;
-    width: 100%;
-  }
-  
-  .markdown-render code {
-    background: var(--primary-color);
-    padding: 0.2rem 0.4rem;
-    border-radius: 4px;
-    font-family: 'Courier New', monospace;
-  }
-  
-  .markdown-render pre {
-    background: var(--primary-color);
-    padding: 0.75rem;
-    border-radius: 6px;
-    overflow-x: auto;
-  }
-  
-  .uploaded-files-container {
-    display: flex;
-    overflow-x: auto;
-    gap: 12px;
-    padding: 8px 16px;
-    max-width: 100%;
-  }
-  
-  .uploaded-file-box {
-    flex: 0 0 auto;
-    display:flex;
-    align-items:center;
-    gap:8px;
-    padding:6px 12px;
-    border-radius: 8px;
-    background-color: var(--surface-variant, #f0f0f0);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    cursor: default;
-    min-width: 160px;
-  }
-  
-  .file-icon {
-    font-size: 20px;
-    color: var(--primary, #6200ee);
-  }
-  
-  .file-name {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .agent-suggestion-list {
-    list-style: none;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    padding: 0;
-    margin: 1rem 0;
-  }
-  
-  .agent-suggestion {
-    background-color: var(--secondary-color);
-    color: var(--text-color);
-    padding: 1rem;
-    border-radius: 1rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    width: calc(50% - 0.5rem);
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-    transition: background 0.3s ease;
-    position: relative;
-  }
-  
-  .agent-suggestion:hover {
-    background-color: var(--secondary-hover-color);
-  }
-  
-  .agent-suggestion.active {
-    background: linear-gradient(135deg, #5A9E00, #A0C54E);
-    color: white;
-    box-shadow: 0 0 8px rgba(90, 158, 0, 0.3);
-  }
-  
-  
-  .agent-radio {
-    margin-right: 0.75rem;
-    position: relative;
-    display: flex;
-    align-items: center;
-  }
-  
-  .agent-radio input[type="radio"] {
-    opacity: 0;
-    position: absolute;
-  }
-  
-  .radio-circle {
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    border: 2px solid var(--text-color);
-    display: inline-block;
-    margin-right: 0.5rem;
-  }
-  
-  .agent-suggestion.active .radio-circle {
-    background-color: white;
-  }
-  
-  .agent-info {
-    flex: 1;
-  }
-  
-  .agent-label {
-    margin: 0;
-    font-weight: 600;
-  }
-  
-  .agent-description {
-    margin: 0.25rem 0 0;
-    margin-right: 3.5rem;
-    font-size: 0.85rem;
-    opacity: 0.8;
-  }
-  
-  .icon {
-    font-size: 1.5rem;
-    margin-left: auto;
-  }
-
-  .agent-selector-box {
-    position: fixed;
-    top: 1rem;
-    right: 1rem;
-    z-index: 1000;
-    max-width: 240px;
-    background: var(--secondary-color);
-    border-radius: 12px;
-    padding: 1rem;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    color: var(--text-color);
-    border: 1px solid var(--secondary-hover-color);
-    transition: opacity 0.3s ease, visibility 0.3s ease;
-  }
-  
-  /* Optionally hide it initially */
-  .agent-selector-box.hidden {
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-  }
-    
+.icon {
+  font-size: 1.5rem;
+  margin-left: auto;
+}

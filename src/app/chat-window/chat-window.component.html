@@ -1,0 +1,53 @@
+<div id="scroller">
+    <div class="chat-list">
+      <div *ngFor="let message of chatMessages" class="message" [ngClass]="message.type">
+        <ng-container *ngIf="message.type === 'incoming'; else outgoingMessage">
+          <div class="markdown-box message-content">
+            <span class="avatar material-symbols-rounded">smart_toy</span>
+            <div class="text markdown-render">
+              <markdown [data]="message.text"></markdown>
+            </div>
+          </div>
+        </ng-container>
+  
+        <ng-template #outgoingMessage>
+          <div class="message-content">
+            <span class="avatar material-symbols-rounded">person</span>
+            <div class="text markdown-render">
+              <p>{{ message.text }}</p>
+            </div>
+          </div>
+        </ng-template>
+  
+        <span class="icon material-symbols-rounded" (click)="onCopyClick(message.text)">content_copy</span>
+      </div>
+  
+  
+  
+  
+      <!-- Typing effect (in progress) -->
+      <div *ngIf="displayedText" class="message incoming markdown-box">
+        <div class="message-content">
+          <span class="avatar material-symbols-rounded">smart_toy</span>
+          <div class="text markdown-render">
+            <markdown [data]="displayedText"></markdown>
+            <span class="cursor-blink">|</span>
+          </div>
+        </div>
+      </div>
+  
+  
+      <!-- Blinking loader -->
+      <div *ngIf="loading && !displayedText" class="message incoming">
+        <div class="message-content">
+          <span class="avatar material-symbols-rounded">smart_toy</span>
+          <p class="text">
+            <span class="dot-blink"></span>
+            <span class="dot-blink" style="animation-delay: 0.2s;"></span>
+            <span class="dot-blink" style="animation-delay: 0.4s;"></span>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div id="anchor"></div>
+  </div>

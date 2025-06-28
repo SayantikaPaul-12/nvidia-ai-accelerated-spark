@@ -1,14 +1,26 @@
-import { Component, ViewEncapsulation, ViewChild, ElementRef, AfterViewChecked, HostListener, AfterViewInit  } from '@angular/core';
+import { Component, ViewEncapsulation, ViewChild, ElementRef, AfterViewChecked, HostListener, AfterViewInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { GradioService } from '../services/gradio.service';
 import { MarkdownModule } from 'ngx-markdown';
+import { HeaderComponent } from '../header/header.component';
+import { AgentSelectorComponent } from '../agent-selector/agent-selector.component';
+import { ChatWindowComponent } from '../chat-window/chat-window.component';
+import { UploadedFilesComponent } from '../uploaded-files/uploaded-files.component';
 
 
 @Component({
   selector: 'app-base',
   standalone: true,
-  imports: [CommonModule, FormsModule, MarkdownModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    MarkdownModule,
+    HeaderComponent,
+    AgentSelectorComponent,
+    ChatWindowComponent,
+    UploadedFilesComponent,
+  ],
   templateUrl: './base.component.html',
   styleUrls: ['./base.component.css'],
   encapsulation: ViewEncapsulation.None,
@@ -49,11 +61,11 @@ export class BaseComponent implements AfterViewInit {
       description: 'Interactive quiz-based learning to test your knowledge on Data Science.',
     }
   ];
-  
+
 
   selectedAgent: string = this.agentTypes[0].value; // Default first agent
 
-  constructor(private gradioService: GradioService) {}
+  constructor(private gradioService: GradioService) { }
 
   @HostListener('window:scroll', [])
   onScroll(): void {
@@ -70,28 +82,28 @@ export class BaseComponent implements AfterViewInit {
   async changeChatAgent(botName: string): Promise<void> {
     if (this.selectedAgent === botName) return; // no change
     if (this.loading) return;
-  
+
     this.loading = true;
     try {
       // 1. Set the bot first
       const [initialMessage, updatedChat] = await this.gradioService.setBot(botName);
       this.selectedAgent = botName;
-  
+
       // 2. Keep chat history but send a special prompt message that contains conversation summary
       // Compose a user message summarizing chat history
       const historySummary = this.chatHistory
         .map(msg => `${msg.role}: ${typeof msg.content === 'string' ? msg.content : '[non-text content]'}`)
         .join('\n');
 
-      if(!historySummary) {
+      if (!historySummary) {
         this.loading = false;
         return;
       }
-  
+
       const systemPrompt = ` Here is the conversation history for context:\n${historySummary}. Please keep this as context and stay in your character.`;
       console.log(systemPrompt)
       await this.sendMessage(systemPrompt);
-  
+
       // 4. Optionally, add the initial bot message from setBot call
       // if (initialMessage) {
       //   this.chatMessages.push({ text: initialMessage, type: 'incoming' });
@@ -100,14 +112,14 @@ export class BaseComponent implements AfterViewInit {
 
       this.chatMessages.splice(-2, 2);
       this.chatHistory.splice(-2, 2);
-      
+
     } catch (error) {
       console.error('Error changing bot:', error);
     }
     this.loading = false;
   }
-  
-  
+
+
 
   // Modified selectAgent to call changeChatAgent
   selectAgent(value: string): void {
@@ -118,27 +130,27 @@ export class BaseComponent implements AfterViewInit {
     const userMsg = messageOverride !== undefined ? messageOverride : this.userInput.trim();
     if (!userMsg) return;
     if (this.loading && !messageOverride) return;
-  
+
     // Push outgoing message
     this.chatMessages.push({ text: userMsg, type: 'outgoing' });
-  
+
     this.loading = true;
     this.displayedText = '';
-  
+
     // Clear userInput only if not overridden message
     if (messageOverride === undefined) {
       this.userInput = '';
     }
-  
+
     try {
       const [_, updatedChat] = await this.gradioService.askGraph(userMsg, this.chatHistory);
       this.chatHistory = updatedChat;
-  
+
       const lastResponse = updatedChat
         .slice()
         .reverse()
         .find((msg: any) => msg.role === 'assistant');
-  
+
       if (lastResponse?.content) {
         await this.animateBotResponse(lastResponse.content);
       }
@@ -146,10 +158,10 @@ export class BaseComponent implements AfterViewInit {
       console.error('Error sending message:', error);
       this.chatMessages.push({ text: 'Error: Could not reach server.', type: 'incoming' });
     }
-  
+
     this.loading = false;
   }
-  
+
 
   async animateBotResponse(text: string) {
     const words = text.split(' ');
@@ -212,36 +224,36 @@ export class BaseComponent implements AfterViewInit {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       const filesArray = Array.from(input.files);
-  
+
       for (const file of filesArray) {
         if (this.uploadedFiles.some(f => f.name === file.name)) continue;
-  
+
         this.uploadedFiles.push(file);
         this.loading = true;
-  
+
         try {
           const formData = new FormData();
           formData.append('file', file);
-  
+
           const response = await fetch('/.netlify/functions/gradio-proxy', {
             method: 'POST',
             body: formData,
           });
-  
+
           if (!response.ok) {
             throw new Error(`Upload failed with status ${response.status}`);
           }
-  
+
           const result = await response.json();
           console.log('Document processed result:', result);
-  
+
           // Optionally: show result in chat area
           if (result?.data) {
             this.chatMessages.push({
               text: `Document: ${file.name} processed. ✅`,
               type: 'incoming',
             });
-  
+
             // Or use actual returned data from Gradio
             // this.chatMessages.push({
             //   text: result.data?.[0] || 'File processed successfully.',
@@ -260,7 +272,7 @@ export class BaseComponent implements AfterViewInit {
       }
     }
   }
-  
+
 
 
 

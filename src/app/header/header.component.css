@@ -1,0 +1,103 @@
+.header,
+.chat-list .message,
+.typing-form {
+    margin: 0 auto;
+    max-width: 980px;
+}
+
+.header {
+    margin-top: 6vh;
+    padding: 1rem;
+    overflow-x: hidden;
+}
+
+body.hide-header .header {
+    margin: 0;
+    display: none;
+}
+
+.header :where(.title, .subtitle) {
+    color: var(--text-color);
+    font-weight: 500;
+    line-height: 4rem;
+}
+
+.header .title {
+    width: fit-content;
+    font-size: 3rem;
+    background-clip: text;
+    background: linear-gradient(to right, #76B900, #8C1D40);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.header .subtitle {
+    font-size: 2.6rem;
+    color: var(--subheading-color);
+}
+
+.agent-suggestion-list {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 0;
+    margin: 1rem 0;
+}
+
+.agent-suggestion {
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+    padding: 1rem;
+    border-radius: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    width: calc(50% - 0.5rem);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    transition: background 0.3s ease;
+    position: relative;
+}
+
+.agent-suggestion:hover {
+    background-color: var(--secondary-hover-color);
+}
+
+.agent-suggestion.active {
+    background: linear-gradient(135deg, #5A9E00, #A0C54E);
+    color: white;
+    box-shadow: 0 0 8px rgba(90, 158, 0, 0.3);
+}
+
+.agent-suggestion.active .radio-circle {
+    background-color: white;
+}
+
+.agent-radio {
+    margin-right: 0.75rem;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.agent-radio input[type="radio"] {
+    opacity: 0;
+    position: absolute;
+}
+
+
+.agent-info {
+    flex: 1;
+}
+
+.agent-label {
+    margin: 0;
+    font-weight: 600;
+}
+
+.agent-description {
+    margin: 0.25rem 0 0;
+    margin-right: 3.5rem;
+    font-size: 0.85rem;
+    opacity: 0.8;
+}

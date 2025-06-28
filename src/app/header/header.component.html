@@ -1,0 +1,31 @@
+<header class="header">
+    <h1 class="title">Hello, there</h1>
+    <p class="subtitle">Choose your 80++ AI assistant:</p>
+    <ul class="agent-suggestion-list">
+      <li
+        class="agent-suggestion"
+        *ngFor="let agent of agentTypes"
+        [class.active]="selectedAgent === agent.value"
+        (click)="onAgentClick(agent.value)"
+      >
+        <label class="agent-radio">
+          <input
+            type="radio"
+            name="agent"
+            [value]="agent.value"
+            [checked]="selectedAgent === agent.value"
+            readonly
+          />
+          <span class="radio-circle"></span>
+        </label>
+  
+        <div class="agent-info">
+          <h4 class="agent-label">{{ agent.label }}</h4>
+          <p class="agent-description">{{ agent.description }}</p>
+        </div>
+  
+        <span class="icon material-symbols-rounded">person</span>
+      </li>
+    </ul>
+  </header>
+  

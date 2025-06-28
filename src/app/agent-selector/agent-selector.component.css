@@ -1,0 +1,82 @@
+.agent-selector-box {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    background: var(--secondary-color);
+    border-radius: 12px;
+    padding: 1rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    max-width: 240px;
+    width: max-content;
+    font-family: inherit;
+    color: var(--text-color);
+    border: 1px solid var(--secondary-hover-color);
+}
+
+.agent-selector-box h4 {
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+    color: var(--text-color);
+    font-weight: 600;
+}
+
+.agent-options {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.agent-option {
+    display: inline-flex;
+    flex-direction: row-reverse;
+    gap: 0.5rem;
+    padding: 0.55rem 0.75rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    background-color: var(--primary-color);
+    color: var(--text-color);
+    transition: background-color 0.25s ease;
+}
+
+.agent-option:hover {
+    background-color: var(--secondary-hover-color);
+}
+
+.agent-option.selected {
+    background-color: #76b9001a;
+    /* NVIDIA green transparent */
+    font-weight: 600;
+    border: 1px solid #76b900;
+}
+
+.agent-option .icon {
+    font-size: 1.2rem;
+    color: #76b900;
+}
+
+.agent-selector-box {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 1000;
+    max-width: 240px;
+    background: var(--secondary-color);
+    border-radius: 12px;
+    padding: 1rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    color: var(--text-color);
+    border: 1px solid var(--secondary-hover-color);
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+/* Optionally hide it initially */
+.agent-selector-box.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
