@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GradioService {
-  private readonly API_URL = '/.netlify/functions/gradio-proxy';
+  private readonly API_URL = environment.GRADIO_API_URL;
 
   /**
    * Sends a message to the Gradio proxy serverless function

@@ -3,7 +3,7 @@
     <ul class="agent-options">
         <li *ngFor="let agent of agentTypes" [class.selected]="selectedAgent === agent.value"
             (click)="onAgentClick(agent.value)" class="suggestion agent-option" [attr.title]="agent.description">
-            <span class="icon material-symbols-rounded">person</span>
+            <span class="icon material-symbols-rounded">{{ agent.icon }}</span>
             <span class="text">{{ agent.label }}</span>
         </li>
     </ul>

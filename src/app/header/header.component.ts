@@ -9,7 +9,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
   styleUrls: ['./header.component.css'],
 })
 export class HeaderComponent {
-  @Input() agentTypes: { value: string; label: string; description: string }[] = [];
+  @Input() agentTypes: { value: string; label: string; description: string; icon: string }[] = [];
   @Input() selectedAgent: string = '';
   @Output() agentSelected = new EventEmitter<string>();
 

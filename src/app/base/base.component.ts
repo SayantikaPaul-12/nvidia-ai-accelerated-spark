@@ -8,7 +8,6 @@ import { AgentSelectorComponent } from '../agent-selector/agent-selector.compone
 import { ChatWindowComponent } from '../chat-window/chat-window.component';
 import { UploadedFilesComponent } from '../uploaded-files/uploaded-files.component';
 
-
 @Component({
   selector: 'app-base',
   standalone: true,
@@ -25,11 +24,8 @@ import { UploadedFilesComponent } from '../uploaded-files/uploaded-files.compone
   styleUrls: ['./base.component.css'],
   encapsulation: ViewEncapsulation.None,
 })
-export class BaseComponent implements AfterViewInit {
+export class BaseComponent {
 
-  ngAfterViewInit() {
-    this.onScroll(); // check on load
-  }
   userInput: string = '';
   isLightMode: boolean = false;
 
@@ -44,28 +40,44 @@ export class BaseComponent implements AfterViewInit {
       value: 'Socratic Tutor',
       label: 'Socratic Tutor',
       description: 'Gently asks questions and nudges you to find answers yourself.',
+      icon: 'psychology_alt', // Brain icon
     },
     {
       value: 'General Purpose Assistant',
       label: 'General Purpose Assistant',
       description: 'Similar to your favourite AI assistant, but with a focus on learning Data Science.',
+      icon: 'neurology', // Headset assistant
     },
     {
       value: 'GPU Benchmarking & Guidance',
       label: 'GPU Benchmarking & Guidance',
       description: 'Writes code well, speeds it up with GPUs, and runs the code to tell exactly how long it runs.',
+      icon: 'memory', // Chip/memory icon
     },
     {
       value: '📝 Quiz Mode',
-      label: '📝 Quiz Mode',
+      label: 'Quiz Mode',
       description: 'Interactive quiz-based learning to test your knowledge on Data Science.',
-    }
+      icon: 'quiz', // Question mark bubble
+    },
+    {
+      value: '🎥 Video Tutorial Bot',
+      label: 'Video Tutorial Bot',
+      description: 'Upload a video and it will learn from it, then answer questions about the video content.',
+      icon: 'smart_display', // Play icon for tutorials
+    },
   ];
-
+  
 
   selectedAgent: string = this.agentTypes[0].value; // Default first agent
 
   constructor(private gradioService: GradioService) { }
+
+  ngOnInit(): void {
+    const saved = localStorage.getItem('themeColor');
+    this.isLightMode = saved === 'light_mode';
+    document.body.classList.toggle('light_mode', this.isLightMode);
+  }
 
   @HostListener('window:scroll', [])
   onScroll(): void {
@@ -77,7 +89,6 @@ export class BaseComponent implements AfterViewInit {
       floatingBox.style.display = rect.bottom < 0 ? 'block' : 'none';
     }
   }
-
 
   async changeChatAgent(botName: string): Promise<void> {
     if (this.selectedAgent === botName) return; // no change
@@ -119,9 +130,6 @@ export class BaseComponent implements AfterViewInit {
     this.loading = false;
   }
 
-
-
-  // Modified selectAgent to call changeChatAgent
   selectAgent(value: string): void {
     this.changeChatAgent(value);
   }
@@ -272,13 +280,5 @@ export class BaseComponent implements AfterViewInit {
       }
     }
   }
-
-
-
-
-  ngOnInit(): void {
-    const saved = localStorage.getItem('themeColor');
-    this.isLightMode = saved === 'light_mode';
-    document.body.classList.toggle('light_mode', this.isLightMode);
-  }
+  
 }

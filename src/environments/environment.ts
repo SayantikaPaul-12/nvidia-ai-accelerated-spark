@@ -1,4 +1,6 @@
 export const environment = {
   production: false,
-  GRADIO_API_URL: "https://924985ad0c2e8686b2.gradio.live/"
+  // GRADIO_API_URL: "http://localhost:3000/.netlify/functions/gradio-proxy",
+  GRADIO_API_URL: '/.netlify/functions/gradio-proxy'
+
 };

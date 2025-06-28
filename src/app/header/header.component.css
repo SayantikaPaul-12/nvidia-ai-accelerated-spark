@@ -101,3 +101,8 @@ body.hide-header .header {
     font-size: 0.85rem;
     opacity: 0.8;
 }
+
+.icon {
+    font-size: 2.5rem;
+    margin-left: auto;
+  }
