@@ -1,5 +1,5 @@
 ````markdown
-# 🤖 AI Tutor – Accelerated Learning System for Data Science
+# AI Tutor – Accelerated Learning System for Data Science
 
 An AI-powered tutoring system designed to accelerate learning in **Data Science** and **GPU Acceleration**, using a multi-agent architecture built on **Ollama LLM**. This platform supports interactive modes including Socratic guidance, real-time quizzes, GPU benchmarking, and video-based learning.
 
@@ -7,9 +7,9 @@ Developed as part of the **AI Spark Challenge** with NVIDIA and AZNext.
 
 ---
 
-## 🚀 Features
+## Features
 
-### 🔍 Mode-Based AI Tutoring
+### Mode-Based AI Tutoring
 - **Socratic Tutor**  
   Encourages learners to reason through questions via guided prompts rather than direct answers.
 
@@ -27,7 +27,7 @@ Developed as part of the **AI Spark Challenge** with NVIDIA and AZNext.
 
 ---
 
-## 🧠 Architecture Overview
+## Architecture Overview
 
 
 * Frontend: Angular UI (Netlify-hosted)
@@ -41,7 +41,7 @@ View full architecture diagram: [`architecture-diagram.png`](./architecture-diag
 
 ---
 
-## 💻 Tech Stack
+## Tech Stack
 
 | Layer             | Technology                               |
 | ----------------- | ---------------------------------------- |
@@ -55,7 +55,7 @@ View full architecture diagram: [`architecture-diagram.png`](./architecture-diag
 
 ---
 
-## 🗂 Project Structure
+## Project Structure
 
 ```
 ├── backend/
@@ -75,9 +75,9 @@ View full architecture diagram: [`architecture-diagram.png`](./architecture-diag
 
 ---
 
-## ⚙️ Local Development Setup
+## Local Development Setup
 
-### 📦 Prerequisites
+### Prerequisites
 
 * Node.js (v18+)
 * Python 3.10+
@@ -85,7 +85,7 @@ View full architecture diagram: [`architecture-diagram.png`](./architecture-diag
 * Ollama installed locally or connected via API
 * FAISS or Chroma setup for vector storage
 
-### 🚀 Quickstart
+### Quickstart
 
 ```bash
 # Clone the repository
@@ -105,9 +105,8 @@ ng serve
 
 
 
-## 🎥 Demo Walkthrough
-
-📽 [Watch Video Demo](#)
+## Demo Walkthrough
+ [Watch Video Demo](#)
 *(Link to Netlify-deployed app demo or hosted video)*
 
 
