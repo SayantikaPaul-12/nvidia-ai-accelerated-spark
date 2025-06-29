@@ -1,27 +1,119 @@
-# NvidiaAiAcceleratedSpark
+````markdown
+# 🤖 AI Tutor – Accelerated Learning System for Data Science
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.9.
+An AI-powered tutoring system designed to accelerate learning in **Data Science** and **GPU Acceleration**, using a multi-agent architecture built on **Ollama LLM**. This platform supports interactive modes including Socratic guidance, real-time quizzes, GPU benchmarking, and video-based learning.
 
-## Development server
+Developed as part of the **AI Spark Challenge** with NVIDIA and AZNext.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+---
 
-## Code scaffolding
+## 🚀 Features
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+### 🔍 Mode-Based AI Tutoring
+- **Socratic Tutor**  
+  Encourages learners to reason through questions via guided prompts rather than direct answers.
 
-## Build
+- **General Assistant**  
+  Provides concise, code-ready answers and explanations for technical topics in ML, data science, and programming.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+- **GPU Accelerator**  
+  Helps users convert CPU-bound code (e.g., NumPy, Pandas) to GPU-accelerated versions using CuPy, cuDF, etc. Includes benchmarking tools.
 
-## Running unit tests
+- **Quiz Mode**  
+  Time-bound 10-question multiple-choice quizzes with instant scoring, answer explanations, weak point analysis, and upskilling recommendations.
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+- **Video Tutor**  
+  Fetches and summarizes relevant tutorial videos from trusted sources (e.g., NVIDIA YouTube, technical conference talks).
 
-## Running end-to-end tests
+---
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+## 🧠 Architecture Overview
 
-## Further help
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+* Frontend: Angular UI (Netlify-hosted)
+* Backend: Node.js or FastAPI (Python)
+* LLM Agent: Ollama
+* Document Ingestion: LangChain loaders + vector chunking
+* Knowledge Source: NVIDIA documents, YouTube transcripts, benchmark papers
+* Persistence: FAISS vector store + user session DB
+
+View full architecture diagram: [`architecture-diagram.png`](./architecture-diagram.png)
+
+---
+
+## 💻 Tech Stack
+
+| Layer             | Technology                               |
+| ----------------- | ---------------------------------------- |
+| Frontend          | Angular 17                               |
+| Backend           | Node.js (Express) / Python (FastAPI)     |
+| AI Core           | Ollama LLM + LangChain                   |
+| Document DB       | FAISS / Chroma                           |
+| Transcript Engine | Whisper for audio/video transcription    |
+| Hosting           | Netlify (Frontend) |
+
+
+---
+
+## 🗂 Project Structure
+
+```
+├── backend/
+│   ├── api/
+│   ├── agents/
+│   └── vectorstore/
+├── frontend/
+│   └── angular-app/
+├── sol/
+│   └── ollama-llm/
+├── assets/
+│   └── knowledge_base/
+├── architecture-diagram.png
+├── deploy-instructions.md
+└── README.md
+```
+
+---
+
+## ⚙️ Local Development Setup
+
+### 📦 Prerequisites
+
+* Node.js (v18+)
+* Python 3.10+
+* Angular CLI
+* Ollama installed locally or connected via API
+* FAISS or Chroma setup for vector storage
+
+### 🚀 Quickstart
+
+```bash
+# Clone the repository
+git clone https://github.com/<your-org>/ai-tutor-gpu.git
+cd ai-tutor-gpu
+
+# Start backend
+cd backend
+npm install             # or pip install -r requirements.txt
+npm run dev             # or uvicorn main:app --reload
+
+# Start frontend
+cd ../frontend/angular-app
+npm install
+ng serve
+```
+
+
+
+## 🎥 Demo Walkthrough
+
+📽 [Watch Video Demo](#)
+*(Link to Netlify-deployed app demo or hosted video)*
+
+
+
+
+ 
+
+---
+
