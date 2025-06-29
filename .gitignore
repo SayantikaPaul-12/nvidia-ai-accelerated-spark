@@ -5,7 +5,7 @@
 /tmp
 /out-tsc
 /bazel-out
-/backend/gradio_env
+/proxy/gradio_env
 
 # Node
 /node_modules

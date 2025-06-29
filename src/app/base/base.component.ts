@@ -100,6 +100,8 @@ export class BaseComponent {
       const [initialMessage, updatedChat] = await this.gradioService.setBot(botName);
       this.selectedAgent = botName;
 
+      this.chatHistory = [];
+
       // 2. Keep chat history but send a special prompt message that contains conversation summary
       // Compose a user message summarizing chat history
       const historySummary = this.chatHistory
@@ -111,18 +113,18 @@ export class BaseComponent {
         return;
       }
 
-      const systemPrompt = ` Here is the conversation history for context:\n${historySummary}. Please keep this as context and stay in your character.`;
-      console.log(systemPrompt)
-      await this.sendMessage(systemPrompt);
+      // const systemPrompt = `Keep this for reference as the previous history:\n${historySummary}.`;
+      // console.log(systemPrompt)
+      // await this.sendMessage(systemPrompt);
 
-      // 4. Optionally, add the initial bot message from setBot call
-      // if (initialMessage) {
-      //   this.chatMessages.push({ text: initialMessage, type: 'incoming' });
-      //   this.chatHistory.push({ role: 'assistant', content: initialMessage });
-      // }
+      // // 4. Optionally, add the initial bot message from setBot call
+      // // if (initialMessage) {
+      // //   this.chatMessages.push({ text: initialMessage, type: 'incoming' });
+      // //   this.chatHistory.push({ role: 'assistant', content: initialMessage });
+      // // }
 
-      this.chatMessages.splice(-2, 2);
-      this.chatHistory.splice(-2, 2);
+      // this.chatMessages.splice(-2, 2);
+      // this.chatHistory.splice(-2, 2);
 
     } catch (error) {
       console.error('Error changing bot:', error);
